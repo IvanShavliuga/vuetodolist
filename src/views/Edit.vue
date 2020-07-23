@@ -1,29 +1,40 @@
 <template>
   <div class="edit">
     {{filterIndex}}
-    <h1>{{(filterIndex.id<0)?'Добавить':'Редактировать'}} задачу</h1>
-    <form class="form">
-      <input class="form__id"
-        type="text"
-        disabled
-        :value="(filterIndex.id<0)?('add'):(filterIndex.id)"
-      />
-      <input class="form__title"
-        type="text"
-        v-model="filterIndex.title">
-      <br>
-      <textarea class="form__body"
-        v-model="filterIndex.body">
-      </textarea>
-      <button class="form__button"
-        @click.prevent="change"> Отправить
-      </button>
-    </form>
+    <div class="edit__form" v-if="!modalShow">
+      <h1>{{(filterIndex.id<0)?'Добавить':'Редактировать'}} задачу</h1>
+      <form class="form">
+        <input class="form__id"
+          type="text"
+          disabled
+          :value="(filterIndex.id<0)?('add'):(filterIndex.id)"
+        />
+        <input class="form__title"
+          type="text"
+          v-model="filterIndex.title">
+        <br>
+        <textarea class="form__body"
+          v-model="filterIndex.body">
+        </textarea>
+        <button class="form__button"
+          @click.prevent="change"> Отправить
+        </button>
+      </form>
+    </div>
+    <div class="edit__modal" v-else>
+      <Modal @answer="send"/>
+    </div>
   </div>
 </template>
 <script>
 import {mapGetters} from 'vuex'
+import Modal from '../components/Modal.vue'
 export default {
+  data() {
+    return {
+      modalShow: false
+    }
+  },
   computed: {
     ...mapGetters([
         'filterIndex'
@@ -32,8 +43,18 @@ export default {
   name: "Edit",
   methods: {
     change() {
-      this.$store.dispatch("editTodo", this.filterIndex)
+      this.modalShow = true;
+    },
+    send(type){
+      if(type=='yes') {
+        this.$store.dispatch("editTodo", this.filterIndex)
+      }
+      this.modalShow = false;
+      this.$router.push({path:'/'});
     }
+  },
+  components: {
+    Modal
   }
 }
 </script>

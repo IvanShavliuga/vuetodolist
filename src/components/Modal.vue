@@ -2,12 +2,21 @@
 <div class="modal">
   <div class="modal__box">
     <p class="modal__text">Вы подтверждаете, что желаете сделать изменения?</p>
-    <i class="modal__close">X</i>
-    <button class="modal__button modal__yes">Yes</button>
-    <button class="modal__button modal__no">No</button>
+    <i class="modal__close" role="button" @click="submit('no')">X</i>
+    <button class="modal__button modal__yes" @click="submit('yes')">Yes</button>
+    <button class="modal__button modal__no" @click="submit('no')">No</button>
   </div>
 </div>
 </template>
+<script>
+export default {
+  methods: {
+    submit(type) {
+      this.$emit("answer", type)
+    }
+  }
+}
+</script>
 <style>
 /*body {
   overflow: hidden;

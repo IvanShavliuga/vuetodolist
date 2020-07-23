@@ -19,7 +19,6 @@ Vue.use(VueRouter)
   {
     path: '/edit',
     name: 'Edit',
-    props: true,
     component: Edit
   }
 ]
