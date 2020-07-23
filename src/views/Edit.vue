@@ -1,20 +1,21 @@
 <template>
   <div class="edit">
-    {{filterIndex}}
+    {{todo}}
     <div class="edit__form" v-if="!modalShow">
-      <h1>{{(filterIndex.id<0)?'Добавить':'Редактировать'}} задачу</h1>
+      <h1>{{(todo.id<0)?'Добавить':'Редактировать'}} задачу</h1>
       <form class="form">
         <input class="form__id"
-          type="text"
+          type="number"
           disabled
-          :value="(filterIndex.id<0)?('add'):(filterIndex.id)"
+          :value="todo.id"
+          v-if="todo.id>=0"
         />
         <input class="form__title"
           type="text"
-          v-model="filterIndex.title">
+          v-model="todo.title">
         <br>
         <textarea class="form__body"
-          v-model="filterIndex.body">
+          v-model="todo.body">
         </textarea>
         <button class="form__button"
           @click.prevent="change"> Отправить
@@ -37,7 +38,7 @@ export default {
   },
   computed: {
     ...mapGetters([
-        'filterIndex'
+        'todo'
     ])
   },
   name: "Edit",
@@ -47,7 +48,10 @@ export default {
     },
     send(type){
       if(type=='yes') {
-        this.$store.dispatch("editTodo", this.filterIndex)
+        if(this.todo.id>=0)
+          this.$store.dispatch("editTodo", this.todo)
+        else
+          this.$store.dispatch("addTodo",this.todo)
       }
       this.modalShow = false;
       this.$router.push({path:'/'});
@@ -67,6 +71,10 @@ export default {
   width: 5%;
   height: 40px;
   float: left;
+  background-color: transparent;
+  border: none;
+  font-size: 18px;
+  font-weight: bold;
 }
 .form__title {
   float: right;

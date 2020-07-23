@@ -39,15 +39,18 @@ export default new Vuex.Store({
     indexedit: -1 //Индекс выбранной задачи
   },
   mutations: {
+    ADD_TODO(state) {
+      state.todos.push({
+          id: state.todos.length,
+          body: state.todo.body,
+          done: false
+      });
+    },
     EDIT_TODO(state, todo) {
       const index = state.todos.findIndex(i => i.id === state.todo.id);
       if( index !== -1 ) {
           state.todos.splice(index, 1, todo)
       }
-    },
-    RESET_TODO_STATE(state) {
-      state.isAdd = true;
-      state.todo = {};
     },
     FILTER_CHANGE(state, filtercode) {
       state.filter = filtercode;
@@ -61,6 +64,7 @@ export default new Vuex.Store({
     },
     TODO_SELECT(state, select) {
       state.indexedit = select;
+      console.log(select);
       if(select < 0) {
         state.todo = {
           id: -1,
@@ -79,6 +83,13 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    addTodo({commit}, todo) {
+      try {
+          commit('ADD_TODO', todo);
+      } catch(e) {
+          console.log(e);
+      }
+    },
     editTodo({commit}, todo) {
       try {
         console.log(todo);
@@ -116,7 +127,7 @@ export default new Vuex.Store({
     filterMask(state) {
       return state.filter;
     },
-    filterIndex(state) {
+    todo(state) {
       return state.todo;
     },
     allTodos(state) {

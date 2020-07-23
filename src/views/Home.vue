@@ -1,9 +1,5 @@
 <template>
   <div class="home">
-    <div class="home__header">
-      <img class="header__logo" alt="Vue logo" src="../assets/logo.png">
-      <h1 class="header__title">Vue.js todo list</h1>
-    </div>
     <div class="header__filter">
       <span class="header__filter-all"
         :style="(filterMask==='all')?('color:#982112'):('')"
@@ -63,11 +59,6 @@ export default {
 .home__header {
   margin: 0;
   padding: 0;
-}
-.header__title {
-  font-size: 36px;
-  font-weight: normal;
-  color: #353498;
 }
 .header__logo {
   width: 60px;

@@ -9,9 +9,9 @@
       <span :class="(todo.done)?('todo__done'):('')">{{(todo.done)?('выполенено'):('в очереди')}}</span>
       <button class="todo__button todo__edit"
         @click="selectTodo">
-        edit
+        Добавить
       </button>
-      <button class="todo__button todo__delete">delete</button>
+      <button class="todo__button todo__delete">Удалить</button>
     </p>
   </div>
 </template>
