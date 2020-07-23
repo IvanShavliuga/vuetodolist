@@ -1,12 +1,18 @@
 <template>
   <div id="nav">
     <router-link to="/">Home</router-link> |
-    <router-link to="/about">Edit</router-link>
+    <router-link to="/edit" @click="addTodo">Edit</router-link>
   </div>
 </template>
 <script>
 export default {
-  name: 'NavBar'
+  name: 'NavBar',
+  methods: {
+    addTodo() {
+      this.$store.dispatch("todoSelect", -1);
+      this.$router.push({ path: "/edit/" })
+    }
+  }
 }
 </script>
 <style>

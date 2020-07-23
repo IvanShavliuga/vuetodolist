@@ -30,4 +30,7 @@ export default {
   font-size: 16x;
   text-align: center;
 }
+.copyright a, .copyright a:visited{
+  color: #42b983;
+}
 </style>

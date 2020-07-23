@@ -32,9 +32,11 @@ export default new Vuex.Store({
         done: false
       }
     ],
-    isAdd: true,
-    filter: 'all',
-    todo: {}
+    isAdd: true,  //Флаг добавления
+    filter: 'all', //Филтер задач
+    todo: {}, //Переменная для редактирования
+    undotodo: {}, //Переменная для отмены
+    indexedit: -1 //Индекс выбранной задачи
   },
   mutations: {
     EDIT_TODO(state, todo) {
@@ -49,21 +51,52 @@ export default new Vuex.Store({
     },
     FILTER_CHANGE(state, filtercode) {
       state.filter = filtercode;
+    },
+    EDIT_TODO(state, todo) {
+      const index = state.todos.findIndex(i => i.id === state.todo.id);
+      if( index !== -1 ) {
+          state.todos.splice(index, 1, todo)
+          state.undotodo = todo;
+      }
+    },
+    TODO_SELECT(state, select) {
+      state.indexedit = select;
+      if(select < 0) {
+        state.todo = {
+          id: -1,
+          title: "Заголовок",
+          body: "Текст задачи",
+          done: false
+        }
+      }else {
+        state.todo = {
+          id: state.todos[select].id,
+          title: state.todos[select].title,
+          body: state.todos[select].body,
+          done: state.todos[select].done
+        }
+      }
     }
   },
   actions: {
     editTodo({commit}, todo) {
       try {
+        console.log(todo);
         commit('EDIT_TODO', todo);
       } catch(e) {
         console.log(e);
-      } finally {
-        commit('RESET_TODO_STATE');
       }
     },
     filterChange({commit}, filtercode) {
       try {
         commit('FILTER_CHANGE', filtercode);
+      } catch(e) {
+        console.log(e);
+      }
+    },
+    todoSelect({commit}, select) {
+      try {
+        commit('TODO_SELECT', select);
       } catch(e) {
         console.log(e);
       }
@@ -82,6 +115,12 @@ export default new Vuex.Store({
     },
     filterMask(state) {
       return state.filter;
+    },
+    filterIndex(state) {
+      return state.todo;
+    },
+    allTodos(state) {
+      return todos;
     }
   }
 })

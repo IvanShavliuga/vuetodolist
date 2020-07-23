@@ -7,19 +7,29 @@
     <p class="todo__body">{{todo.body}}</p>
     <p class="todo__status">
       <span :class="(todo.done)?('todo__done'):('')">{{(todo.done)?('выполенено'):('в очереди')}}</span>
-      <button class="todo__button todo__edit">edit</button>
+      <button class="todo__button todo__edit"
+        @click="selectTodo">
+        edit
+      </button>
       <button class="todo__button todo__delete">delete</button>
     </p>
   </div>
 </template>
 
 <script>
+import Vuex from 'vuex'
 export default {
   name: 'TodoItem',
   props: {
     todo: {
       type: Object,
       required: true
+    }
+  },
+  methods: {
+    selectTodo() {
+      this.$store.dispatch("todoSelect", this.todo.id);
+      this.$router.push({ path: "/edit/" })
     }
   }
 }
