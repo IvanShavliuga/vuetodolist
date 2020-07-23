@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Modal/>
+    <!--<Modal/>-->
     <NavBar/>
     <router-view/>
     <p class="copyright">(C) 2020 <a href="https://github.com/IvanShavliuga">Ivan Ivanov (Shavliuga)</a>, Belarus, Novopolotsk</p>

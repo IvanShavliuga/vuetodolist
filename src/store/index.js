@@ -37,8 +37,37 @@ export default new Vuex.Store({
     todo: {}
   },
   mutations: {
+    EDIT_TODO(state, todo) {
+      const index = state.todos.findIndex(i => i.id === state.todo.id);
+      if( index !== -1 ) {
+          state.todos.splice(index, 1, todo)
+      }
+    },
+    RESET_TODO_STATE(state) {
+      state.isAdd = true;
+      state.todo = {};
+    },
+    FILTER_CHANGE(state, filtercode) {
+      state.filter = filtercode;
+    }
   },
   actions: {
+    editTodo({commit}, todo) {
+      try {
+        commit('EDIT_TODO', todo);
+      } catch(e) {
+        console.log(e);
+      } finally {
+        commit('RESET_TODO_STATE');
+      }
+    },
+    filterChange({commit}, filtercode) {
+      try {
+        commit('FILTER_CHANGE', filtercode);
+      } catch(e) {
+        console.log(e);
+      }
+    }
   },
   getters: {
     filteredTodos(state) {
@@ -50,6 +79,9 @@ export default new Vuex.Store({
            default:
                return state.todos;
        }
+    },
+    filterMask(state) {
+      return state.filter;
     }
   }
 })

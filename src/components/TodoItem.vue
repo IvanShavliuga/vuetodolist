@@ -65,5 +65,6 @@ export default {
   background-color: transparent;
   border: none;
   float: right;
+  cursor: pointer;
 }
 </style>
