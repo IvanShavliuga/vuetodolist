@@ -2,15 +2,16 @@
 <div class="modal">
   <div class="modal__box">
     <p class="modal__text">Вы подтверждаете, что желаете сделать изменения?</p>
+    <i class="modal__close">X</i>
     <button class="modal__button modal__yes">Yes</button>
     <button class="modal__button modal__no">No</button>
   </div>
 </div>
 </template>
 <style>
-body {
+/*body {
   overflow: hidden;
-}
+}*/
 .modal {
   background-color: rgba(0, 0, 0, 0.7);
   height: 100vh;
@@ -37,6 +38,7 @@ body {
   height: 50px;
   color: #fff;
   margin: 20px;
+  cursor: pointer;
 }
 .modal__yes {
   background-color: #45ac45;
@@ -45,5 +47,16 @@ body {
 .modal__no {
   background-color: #ac4545;
   border: 1px solid #892323;
+}
+.modal__close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  color:#232323;
+  width: 20px;
+  height: 20px;
+  font-size: 18px;
+  font-style: normal;
+  cursor: pointer;
 }
 </style>
