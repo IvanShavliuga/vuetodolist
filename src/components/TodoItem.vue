@@ -4,14 +4,16 @@
       <span class="todo__id">#{{todo.id + 1}}</span>
       <span class="todo__title">{{todo.title}}</span>
     </p>
-    <p class="todo__body">{{todo.body}}</p>
     <p class="todo__status">
-      <span :class="(todo.done)?('todo__done'):('')">{{(todo.done)?('выполенено'):('в очереди')}}</span>
+      <span :class="(todo.done)?('todo__done'):('')">{{(todo.done)?('выполнено'):('в очереди')}}</span>
       <button class="todo__button todo__edit"
         @click="selectTodo">
-        Добавить
+        Изменить
       </button>
-      <button class="todo__button todo__delete">Удалить</button>
+      <button class="todo__button todo__delete"
+        @click="deleteTodo(todo.id)">
+        Удалить
+      </button>
     </p>
   </div>
 </template>
@@ -30,6 +32,9 @@ export default {
     selectTodo() {
       this.$store.dispatch("todoSelect", this.todo.id);
       this.$router.push({ path: "/edit/" })
+    },
+    deleteTodo(id) {
+      this.$emit("delete",id);
     }
   }
 }
@@ -52,29 +57,30 @@ export default {
   text-align: justify;
 }
 .todo__info, .todo__status{
-  padding: 0;
-  height: 24px;
+  padding: 5px  0;
   margin: 0;
   font-size: 18px;
   background-color: #d6f6f9;
   text-align: left;
 }
+.todo__status {
+  display: flex;
+  flex-wrap: wrap;
+}
 .todo__done {
-  color: #78de67;
-  text-transform: uppercase;
+  color: #389e27;
 }
 .todo__title {
   color: #672356;
 }
 .todo__button {
-  color: #256958;
+  color: #2539a8;
   text-transform: uppercase;
   text-decoration: underline;
   margin: 0;
   padding: 0 10px;
   background-color: transparent;
   border: none;
-  float: right;
   cursor: pointer;
 }
 </style>

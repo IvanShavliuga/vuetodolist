@@ -1,51 +1,24 @@
 <template>
   <div class="home">
-    <div class="header__filter">
-      <span class="header__filter-all"
-        :style="(filterMask==='all')?('color:#982112'):('')"
-        @click="filterChange('all')">
-        Все
-      </span>
-      <span class="header__filter-done"
-        :style="(filterMask==='complete')?('color:#982112'):('')"
-        @click="filterChange('complete')">
-        Выполнено
-      </span>
-      <span class="header__filter-queque"
-        :style="(filterMask==='incomplete')?('color:#982112'):('')"
-        @click="filterChange('incomplete')">
-        На очереди
-      </span>
-    </div>
-    <div v-if="filteredTodos.length">
-      <TodoItem v-for="(t,k) in filteredTodos" :todo="t" :key="k"/>
-    </div>
-    <div v-else>
-      <p>Нет задач в списке</p>
+    <h1 class="home__title">Список заметок</h1>
+    <div class="home__list">
+      <Note v-for="(n, k) in allNotes" :key="k" :note="n"/>
     </div>
   </div>
 </template>
 <script>
-import TodoItem from '@/components/TodoItem.vue'
 import {mapGetters} from 'vuex'
 import Vuex from 'vuex'
+import Note from '../components/Note.vue'
+
 export default {
-  name: 'Home',
-  data() {
-    return {
-      filter: 'all'
-    }
-  },
-  methods: Vuex.mapActions([
-    "filterChange"
-  ]),
+  name: "Home",
   components: {
-    TodoItem
+    Note
   },
   computed: {
     ...mapGetters([
-        'filteredTodos',
-        'filterMask'
+        'allNotes'
     ])
   }
 }
@@ -55,26 +28,27 @@ export default {
   margin: 0 auto;
   padding: 0;
   width: 80%;
+
 }
-.home__header {
-  margin: 0;
+.home__title {
+  margin: 10px;
   padding: 0;
-}
-.header__logo {
-  width: 60px;
-  height: 80px;
-  margin-right: 20px;
-}
-.header__filter {
-  padding: 15px;
-  margin: 0;
-  color: #555;
+  font-size: 32px;
   text-align: left;
-  width: 100%;
+  color: #765681;
 }
-.header__filter span {
-  margin: 0 15px;
-  font-size: 20px;
-  cursor: pointer;
+.home__list {
+  display: flex;
+  flex-wrap: wrap;
+}
+@media screen and (max-width: 500px) {
+  .home {
+    width: 100%;
+    margin: 0;
+  }
+  .home__list {
+    width: 100%;
+    margin: 0;
+  }
 }
 </style>

@@ -2,12 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import Edit from '../views/Edit.vue'
-/*
-const EditPage = {
-  template: '<Edit :id="$route.params.id"></Edit>',
-  components: Edit
-}
-*/
+
 Vue.use(VueRouter)
 
   const routes = [

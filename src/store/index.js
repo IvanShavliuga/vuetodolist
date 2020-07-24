@@ -5,60 +5,115 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    todos: [{
-        id: 0,
-        title: "Lorem Ipsum is simply dummy text",
-        body: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
-        done: false
-      }, {
-        id: 1,
-        title: "Lorem Ipsum is simply dummy text",
-        body: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
-        done: false
-      }, {
-        id: 2,
-        title: "Lorem Ipsum is simply dummy text",
-        body: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
-        done: false
-      }, {
-        id: 3,
-        title: "Lorem Ipsum is simply dummy text",
-        body: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
-        done: false
-      }, {
-        id: 4,
-        title: "Lorem Ipsum is simply dummy text",
-        body: 'Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.',
-        done: false
-      }
-    ],
-    isAdd: true,  //Флаг добавления
-    filter: 'all', //Филтер задач
+    notes: [{
+      id: 0,
+      title: "Lorem Ipsum is simply dummy text",
+      todos: [{
+          id: 0,
+          title: "Lorem Ipsum is simply dummy text",
+          done: true
+        }, {
+          id: 1,
+          title: "Lorem Ipsum is simply dummy text",
+          done: false
+        }, {
+          id: 2,
+          title: "Lorem Ipsum is simply dummy text",
+          done: true
+        }, {
+          id: 3,
+          title: "Lorem Ipsum is simply dummy text",
+          done: false
+        }, {
+          id: 4,
+          title: "Lorem Ipsum is simply dummy text",
+          done: false
+        }
+      ]
+    },{
+      id: 1,
+      title: "Lorem Ipsum is simply dummy text",
+      todos: [{
+          id: 0,
+          title: "Lorem Ipsum is simply dummy text",
+          done: false
+        }, {
+          id: 1,
+          title: "Lorem Ipsum is simply dummy text",
+          done: false
+        }, {
+          id: 2,
+          title: "Lorem Ipsum is simply dummy text",
+          done: false
+        }, {
+          id: 3,
+          title: "Lorem Ipsum is simply dummy text",
+          done: true
+        }, {
+          id: 4,
+          title: "Lorem Ipsum is simply dummy text",
+          done: true
+        }
+      ]
+    },{
+      id: 2,
+      title: "Lorem Ipsum is simply dummy text",
+      todos: [{
+          id: 0,
+          title: "Lorem Ipsum is simply dummy text",
+          done: true
+        }, {
+          id: 1,
+          title: "Lorem Ipsum is simply dummy text",
+          done: false
+        }, {
+          id: 2,
+          title: "Lorem Ipsum is simply dummy text",
+          done: true
+        }, {
+          id: 3,
+          title: "Lorem Ipsum is simply dummy text",
+          done: false
+        }, {
+          id: 4,
+          title: "Lorem Ipsum is simply dummy text",
+          done: true
+        }
+      ]
+    }],
+    filter: 'all', //Фильтер задач
     todo: {}, //Переменная для редактирования
-    undotodo: {}, //Переменная для отмены
-    indexedit: -1 //Индекс выбранной задачи
+    undotodo: [], //Переменная для отмены
+    indexedit: -1, //Индекс выбранной задачи
+    indexnote: -1 //Индекс выбранной заметки
   },
   mutations: {
+    DELETE_TODO(state, inddel) {
+      const index = state.notes[state.indexnote].todos.findIndex(i => i.id === inddel);
+      if( index !== -1  ) {
+        state.notes[state.indexnote].todos.splice(index, 1)
+      }
+    },
     ADD_TODO(state) {
-      state.todos.push({
+      state.notes[state.indexnote].todos.push({
           id: state.todos.length,
           body: state.todo.body,
           done: false
       });
     },
     EDIT_TODO(state, todo) {
-      const index = state.todos.findIndex(i => i.id === state.todo.id);
+      const index = state.notes[state.indexnote].todos.findIndex(i => i.id === state.todo.id);
       if( index !== -1 ) {
-          state.todos.splice(index, 1, todo)
+          state.notes[state.indexnote].todos.splice(index, 1, todo)
       }
     },
     FILTER_CHANGE(state, filtercode) {
       state.filter = filtercode;
     },
     EDIT_TODO(state, todo) {
-      const index = state.todos.findIndex(i => i.id === state.todo.id);
+      const index = state.notes[state.indexnote].todos.findIndex(i => i.id === state.todo.id);
       if( index !== -1 ) {
-          state.todos.splice(index, 1, todo)
+          state.notes[state.indexnote].todos.splice(index, 1, todo)
           state.undotodo = todo;
       }
     },
@@ -74,15 +129,25 @@ export default new Vuex.Store({
         }
       }else {
         state.todo = {
-          id: state.todos[select].id,
-          title: state.todos[select].title,
-          body: state.todos[select].body,
-          done: state.todos[select].done
+          id: state.notes[state.indexnote].todos[select].id,
+          title: state.notes[state.indexnote].todos[select].title,
+          body: state.notes[state.indexnote].todos[select].body,
+          done: state.notes[state.indexnote].todos[select].done
         }
       }
+    },
+    NOTE_SELECT(state, select) {
+      state.indexnote=select;
     }
   },
   actions: {
+    deleteTodo({commit}, index) {
+      try {
+          commit('DELETE_TODO', index);
+      } catch(e) {
+          console.log(e);
+      }
+    },
     addTodo({commit}, todo) {
       try {
           commit('ADD_TODO', todo);
@@ -111,17 +176,24 @@ export default new Vuex.Store({
       } catch(e) {
         console.log(e);
       }
+    },
+    noteSelect({commit}, select) {
+      try {
+        commit('NOTE_SELECT', select);
+      } catch(e) {
+        console.log(e);
+      }
     }
   },
   getters: {
     filteredTodos(state) {
        switch(state.filter) {
            case 'complete':
-               return state.todos.filter(todo => todo.done);
+               return state.notes[state.indexnote].todos.filter(todo => todo.done);
            case 'incomplete':
-               return state.todos.filter(todo => !todo.done);
+               return state.notes[state.indexnote].todos.filter(todo => !todo.done);
            default:
-               return state.todos;
+               return state.notes[state.indexnote].todos;
        }
     },
     filterMask(state) {
@@ -131,7 +203,13 @@ export default new Vuex.Store({
       return state.todo;
     },
     allTodos(state) {
-      return todos;
+      return state.notes[state.indexnote].todos;
+    },
+    filterNote(state) {
+      return state.notes[state.indexnote];
+    },
+    allNotes(state) {
+      return state.notes;
     }
   }
 })
