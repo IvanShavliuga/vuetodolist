@@ -202,6 +202,10 @@ export default new Vuex.Store({
     todo(state) {
       return state.todo;
     },
+    note(state) {
+      console.log(state.indexnote);
+      return state.notes[state.indexnote];
+    },
     allTodos(state) {
       return state.notes[state.indexnote].todos;
     },

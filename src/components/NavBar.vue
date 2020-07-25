@@ -1,6 +1,6 @@
 <template>
   <ul class="nav">
-    <li class="nav__item">Vue.js | список задач</li>
+    <li class="nav__item">Vue.js</li>
     <li class="nav__item">
       <router-link to="/">Список задач</router-link></li>
     <li class="nav__item" @click.prevent="addTodo">
@@ -37,5 +37,18 @@ export default {
   font-weight: bold;
   color: #2c3e50;
   font-size: 22px;
+}
+@media screen and (max-width: 500px) {
+  .nav {
+    padding: 5px;
+    width: 100%;
+  }
+  .nav__item {
+    margin: 0 5px;
+    font-size: 18px;
+  }
+  .nav a {
+    font-size: 18px;
+  }
 }
 </style>

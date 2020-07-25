@@ -2,7 +2,7 @@
 <article class="note">
   <h3 class="note__title">#{{note.id+1}} {{note.title}}</h3>
   <ul class="note__menu">
-    <li class="note__item">Редактировать</li>
+    <li class="note__item" @click="edit(note.id)">Редактировать</li>
     <li class="note__item">Удалить</li>
     <li class="note__item">Отменить</li>
   </ul>
@@ -52,9 +52,7 @@ export default {
       indDelete: -1
     }
   },
-  methods: {...mapActions([
-      "filterChange"
-    ]),
+  methods: {
     deleteClick(id) {
       this.modalShow =true;
       this.indDelete = id;
@@ -65,6 +63,10 @@ export default {
       }
       this.indDelete = -1;
       this.modalShow=false;
+    },
+    edit(id) {
+      this.$store.dispatch("noteSelect", id);
+      this.$router.push({ path: "/edit/" })
     }
   },
   components: {

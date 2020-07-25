@@ -1,24 +1,21 @@
 <template>
   <div class="edit">
-    {{todo}}
+    {{note}}
     <div class="edit__form" v-if="!modalShow">
-      <h1>{{(todo.id<0)?'Добавить':'Редактировать'}} задачу</h1>
+      <!--<h1>{{(todo.id<0)?'Добавить':'Редактировать'}} задачу</h1>-->
+      <h1>Редактировать заметку</h1>
       <form class="form">
         <input class="form__id"
           type="text"
           disabled
-          :value="'#'+todo.id"
-          v-if="todo.id>=0"
+          :value="'#'+note.id"
+          v-if="note.id>=0"
         />
         <input class="form__title"
           type="text"
-          v-model="todo.title">
+          v-model="note.title">
         <br>
-        <textarea class="form__body"
-          v-model="todo.body">
-        </textarea>
-        <br>
-        <div class = "form__panel">
+        <!--<div class = "form__panel">
           <input class="form__check" id="done" type="checkbox" v-model="todo.done">
           <label class="form__label" for="done">
             {{(todo.done)?('выполнено'):('на очереди')}}
@@ -26,8 +23,14 @@
           <button class="form__button"
             @click.prevent="change"> Отправить
           </button>
-        </div>
+        </div> -->
       </form>
+      <div class="edit__list">
+        <TodoItem v-for="(t,k) in note.todos"
+          :todo="t"
+          :key="k"
+          mode="write"/>
+      </div>
     </div>
     <div class="edit__modal" v-else>
       <Modal @answer="send"/>
@@ -37,6 +40,7 @@
 <script>
 import {mapGetters} from 'vuex'
 import Modal from '../components/Modal.vue'
+import TodoItem from '../components/TodoItem.vue'
 export default {
   data() {
     return {
@@ -45,14 +49,14 @@ export default {
   },
   computed: {
     ...mapGetters([
-        'todo'
+        'note'
     ])
   },
   name: "Edit",
   methods: {
     change() {
       this.modalShow = true;
-    },
+    }/*,
     send(type){
       if(type=='yes') {
         if(this.todo.id>=0)
@@ -62,10 +66,11 @@ export default {
       }
       this.modalShow = false;
       this.$router.push({path:'/'});
-    }
+    }*/
   },
   components: {
-    Modal
+    Modal,
+    TodoItem
   }
 }
 </script>

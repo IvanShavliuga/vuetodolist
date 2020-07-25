@@ -7,10 +7,12 @@
     <p class="todo__status">
       <span :class="(todo.done)?('todo__done'):('')">{{(todo.done)?('выполнено'):('в очереди')}}</span>
       <button class="todo__button todo__edit"
+        v-if="mode=='write'"
         @click="selectTodo">
         Изменить
       </button>
       <button class="todo__button todo__delete"
+        v-if="mode=='write'"
         @click="deleteTodo(todo.id)">
         Удалить
       </button>
@@ -26,16 +28,20 @@ export default {
     todo: {
       type: Object,
       required: true
+    },
+    mode: {
+      type: String,
+      default: "read"
     }
   },
   methods: {
-    selectTodo() {
+    /*selectTodo() {
       this.$store.dispatch("todoSelect", this.todo.id);
       this.$router.push({ path: "/edit/" })
     },
     deleteTodo(id) {
       this.$emit("delete",id);
-    }
+    }*/
   }
 }
 </script>
