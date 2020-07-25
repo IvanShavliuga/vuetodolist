@@ -97,6 +97,11 @@ export default {
   margin: 0 5px;
   display: inline-block;
 }
+.note__title {
+  font-size: 22px;
+  height: 30px;
+  margin: 10px 0;
+}
 @media screen and (max-width: 1100px) {
   .note {
     width: 90%;

@@ -4,7 +4,7 @@
     <li class="nav__item">
       <router-link to="/">Список задач</router-link></li>
     <li class="nav__item" @click.prevent="addTodo">
-      <router-link to="/edit">Добавить задачу</router-link>
+      <router-link to="/edit">Добавить заметку</router-link>
     </li>
   </ul>
 </template>

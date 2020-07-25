@@ -91,9 +91,7 @@ export default {
   margin-bottom: 15px;
 }
 .form__title {
-  float: right;
   width: 90%;
-  height: 40px;
   margin-bottom: 15px;
 }
 .form__body {

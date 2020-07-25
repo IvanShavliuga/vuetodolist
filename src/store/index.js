@@ -82,7 +82,7 @@ export default new Vuex.Store({
       ]
     }],
     filter: 'all', //Фильтер задач
-    todo: {}, //Переменная для редактирования
+    node: {}, //Переменная для редактирования
     undotodo: [], //Переменная для отмены
     indexedit: -1, //Индекс выбранной задачи
     indexnote: -1 //Индекс выбранной заметки
@@ -124,14 +124,12 @@ export default new Vuex.Store({
         state.todo = {
           id: -1,
           title: "Заголовок",
-          body: "Текст задачи",
           done: false
         }
       }else {
         state.todo = {
           id: state.notes[state.indexnote].todos[select].id,
           title: state.notes[state.indexnote].todos[select].title,
-          body: state.notes[state.indexnote].todos[select].body,
           done: state.notes[state.indexnote].todos[select].done
         }
       }
@@ -204,7 +202,26 @@ export default new Vuex.Store({
     },
     note(state) {
       console.log(state.indexnote);
-      return state.notes[state.indexnote];
+      if(state.indexnote>=0) {
+        const nt = {
+          id: state.indexnote,
+          title: state.notes[state.indexnote].title,
+          todos: state.notes[state.indexnote].todos
+        }
+        state.note=nt;
+      }else {
+        const nt = {
+          id: state.notes.length,
+          title: `Заголовок заметки ${state.notes.length}`,
+          todos: [{
+            id: 0,
+            title: "Заметка добвлена",
+            done: false
+          }]
+        }
+        state.note=nt;
+      }
+      return state.note
     },
     allTodos(state) {
       return state.notes[state.indexnote].todos;

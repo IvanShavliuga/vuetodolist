@@ -2,15 +2,19 @@
   <div class="todo">
     <p class="todo__info">
       <span class="todo__id">#{{todo.id + 1}}</span>
-      <span class="todo__title">{{todo.title}}</span>
+      <span class="todo__title" v-if="mode=='read'">{{todo.title}}</span>
+      <input type="text"
+        v-if="mode=='write'"
+        v-model="todo.title"
+      />
     </p>
     <p class="todo__status">
-      <span :class="(todo.done)?('todo__done'):('')">{{(todo.done)?('выполнено'):('в очереди')}}</span>
-      <button class="todo__button todo__edit"
-        v-if="mode=='write'"
-        @click="selectTodo">
-        Изменить
-      </button>
+      <input type="checkbox"
+        :checked="todo.done"
+      />
+      <span :class="(todo.done)?('todo__done'):('')">
+        {{(todo.done)?('выполнено'):('в очереди')}}
+      </span>
       <button class="todo__button todo__delete"
         v-if="mode=='write'"
         @click="deleteTodo(todo.id)">
