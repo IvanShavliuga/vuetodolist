@@ -3,14 +3,16 @@
     <p class="todo__info">
       <span class="todo__id">#{{todo.id + 1}}</span>
       <span class="todo__title" v-if="mode=='read'">{{todo.title}}</span>
-      <input type="text"
+      <input class="todo__input"
+        type="text"
         v-if="mode=='write'"
         v-model="todo.title"
       />
     </p>
     <p class="todo__status">
       <input type="checkbox"
-        :checked="todo.done"
+        v-model="todo.done"
+        v-if="mode=='write'"
       />
       <span :class="(todo.done)?('todo__done'):('')">
         {{(todo.done)?('выполнено'):('в очереди')}}
@@ -25,7 +27,7 @@
 </template>
 
 <script>
-import Vuex from 'vuex'
+import {mapActions} from 'vuex'
 export default {
   name: 'TodoItem',
   props: {
@@ -39,13 +41,16 @@ export default {
     }
   },
   methods: {
-    /*selectTodo() {
+    /*...mapActions([
+        'deleteTodo'
+    ])
+    selectTodo() {
       this.$store.dispatch("todoSelect", this.todo.id);
       this.$router.push({ path: "/edit/" })
-    },
+    },*/
     deleteTodo(id) {
       this.$emit("delete",id);
-    }*/
+    }
   }
 }
 </script>
@@ -82,6 +87,10 @@ export default {
 }
 .todo__title {
   color: #672356;
+}
+.todo__input {
+  height: 30px;
+  font-size: 20px;
 }
 .todo__button {
   color: #2539a8;

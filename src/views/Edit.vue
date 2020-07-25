@@ -1,9 +1,38 @@
 <template>
   <div class="edit">
-    {{note}}
+    <b style="color:#df98a0">{{note}}</b>
+    <b style="color:#89c8a0">{{undonote}}</b>
     <div class="edit__form" v-if="!modalShow">
-      <!--<h1>{{(todo.id<0)?'Добавить':'Редактировать'}} задачу</h1>-->
-      <h1>Редактировать заметку</h1>
+      <h1>{{(modeedit)?'Добавить':'Редактировать'}} задачу</h1>
+      <div class = "form__panel">
+        <button class="form__button button__close"
+          title="Вернуть на главную">
+          Главная
+        </button>
+        <button class="form__button button__cancel"
+          title="Отменить изменения">
+          Отмена
+        </button>
+        <button class="form__button button__retry"
+          title="Повторить изменения">
+          Повторить
+        </button>
+        <input class="form__addtext"
+          type="text"
+          v-model="addtasktext"/>
+        <input type="checkbox"
+          v-model="addtaskdone"/> Выполнено
+        <button class="form__button button__add"
+          title="Добавить задачу"
+          @click="addTodoSend">
+          Добавить
+        </button>
+        <button class="form__button button__save"
+          title="Сохранить изменения"
+          @click="saveNote">
+          Сохранить
+        </button>
+      </div>
       <form class="form">
         <input class="form__id"
           type="text"
@@ -25,11 +54,15 @@
           </button>
         </div> -->
       </form>
-      <div class="edit__list">
+      <div class="edit__list" v-if="note.todos.length">
         <TodoItem v-for="(t,k) in note.todos"
           :todo="t"
           :key="k"
-          mode="write"/>
+          mode="write"
+          @delete="deleteTodoClick"/>
+      </div>
+      <div v-else>
+        <p>Нет задач в списке</p>
       </div>
     </div>
     <div class="edit__modal" v-else>
@@ -38,25 +71,54 @@
   </div>
 </template>
 <script>
-import {mapGetters} from 'vuex'
 import Modal from '../components/Modal.vue'
 import TodoItem from '../components/TodoItem.vue'
 export default {
   data() {
     return {
-      modalShow: false
+      modalShow: false,
+      note: {},
+      undonote: {},
+      modeedit: true,
+      addtaskform: false,
+      addtasktext: "Текст задачи",
+      addtaskdone: false
     }
   },
-  computed: {
-    ...mapGetters([
-        'note'
-    ])
+  created() {
+    this.note = this.$store.getters.note;
+    this.undonote = this.$store.getters.undonote;
+    this.moveedit = this.$store.getters.moveedit;
+  },
+  updated() {
+    this.note = this.$store.getters.note;
+    this.undonote = this.$store.getters.undonote;
+    this.moveedit = this.$store.getters.moveedit;
   },
   name: "Edit",
   methods: {
     change() {
       this.modalShow = true;
-    }/*,
+    },
+    deleteTodoClick(id) {
+      this.$store.dispatch("deleteTodo",id);
+    },
+    addTodoSend() {
+      const task =   {
+        title: this.addtasktext,
+        done: this.addtaskdone
+      }
+      this.$store.dispatch("addTodo",task);
+    },
+    saveNote() {
+      
+    },
+    send(type) {
+      if(type == 'yes') {
+      }
+      this.modalShow=false;
+    }
+    /*,
     send(type){
       if(type=='yes') {
         if(this.todo.id>=0)
@@ -75,24 +137,42 @@ export default {
 }
 </script>
 <style>
+.edit__form {
+  padding: 10px;
+  margin: 10px;
+}
 .form {
-  width: 80%;
-  margin: 0 auto;
+  margin-top: 50px;
 }
 .form__id {
-  width: 5%;
-  height: 40px;
-  float: left;
+  width: 3%;
+  height: 30px;
   background-color: transparent;
   border: none;
   font-size: 24px;
   text-decoration: underline;
   font-weight: bold;
+  margin-bottom: 0;
+  margin-right: 10px;
+  display: inline-block;
+}
+.form__addtext {
+  width: 250px;
   margin-bottom: 15px;
+  margin-left: 15px;
+  height: 30px;
+  font-size: 20px;
+  padding: 5px;
+  display: inline-block;
 }
 .form__title {
-  width: 90%;
+  width: 92%;
   margin-bottom: 15px;
+  margin-left: 15px;
+  height: 30px;
+  font-size: 20px;
+  padding: 5px;
+  display: inline-block;
 }
 .form__body {
   width: 100%;
@@ -109,8 +189,8 @@ export default {
   float: left;
 }
 .form__button {
-  float: right;
   padding: 10px;
+  margin: 0 5px;
   font-size: 24px;
   height: 50px;
   color: #fff;

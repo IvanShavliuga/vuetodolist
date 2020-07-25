@@ -27,7 +27,7 @@
     <TodoItem v-for="(t,k) in note.todos"
       :todo="t"
       :key="k"
-      @delete="deleteClick"/>
+      />
   </div>
   <div v-else>
     <p>Нет задач в списке</p>
@@ -53,17 +53,6 @@ export default {
     }
   },
   methods: {
-    deleteClick(id) {
-      this.modalShow =true;
-      this.indDelete = id;
-    },
-    send(type) {
-      if(type == 'yes') {
-        this.$store.dispatch("deleteTodo",this.indDelete);
-      }
-      this.indDelete = -1;
-      this.modalShow=false;
-    },
     edit(id) {
       this.$store.dispatch("noteSelect", id);
       this.$router.push({ path: "/edit/" })
@@ -71,13 +60,13 @@ export default {
   },
   components: {
     TodoItem
-  }/*,
+  },
   computed: {
     ...mapGetters([
         'filteredTodos',
         'filterMask'
     ])
-  }*/
+  }
 }
 </script>
 <style>

@@ -82,40 +82,41 @@ export default new Vuex.Store({
       ]
     }],
     filter: 'all', //Фильтер задач
+    addnote: true,
     node: {}, //Переменная для редактирования
-    undotodo: [], //Переменная для отмены
+    undonote: [], //Переменная для отмены
     indexedit: -1, //Индекс выбранной задачи
     indexnote: -1 //Индекс выбранной заметки
   },
   mutations: {
     DELETE_TODO(state, inddel) {
-      const index = state.notes[state.indexnote].todos.findIndex(i => i.id === inddel);
+      const index = state.note.todos.findIndex(i => i.id === inddel);
       if( index !== -1  ) {
-        state.notes[state.indexnote].todos.splice(index, 1)
+        console.log("note: "+state.note.todos.length)
+        /*state.undonote.push ({
+          id: state.note.id,
+          title: state.note.title,
+          todos: state.note.todos
+        });*/
+        state.note.todos.splice(index, 1)
+        console.log("note: "+state.note.todos.length)
       }
     },
-    ADD_TODO(state) {
-      state.notes[state.indexnote].todos.push({
-          id: state.todos.length,
-          body: state.todo.body,
-          done: false
+    ADD_TODO(state, todo) {
+      state.note.todos.push({
+          id: state.note.todos.length,
+          title: todo.title,
+          done: todo.done
       });
     },
     EDIT_TODO(state, todo) {
-      const index = state.notes[state.indexnote].todos.findIndex(i => i.id === state.todo.id);
+      const index = state.note.todos.findIndex(i => i.id === state.todo.id);
       if( index !== -1 ) {
-          state.notes[state.indexnote].todos.splice(index, 1, todo)
+          state.note.todos.splice(index, 1, todo)
       }
     },
     FILTER_CHANGE(state, filtercode) {
       state.filter = filtercode;
-    },
-    EDIT_TODO(state, todo) {
-      const index = state.notes[state.indexnote].todos.findIndex(i => i.id === state.todo.id);
-      if( index !== -1 ) {
-          state.notes[state.indexnote].todos.splice(index, 1, todo)
-          state.undotodo = todo;
-      }
     },
     TODO_SELECT(state, select) {
       state.indexedit = select;
@@ -136,9 +137,26 @@ export default new Vuex.Store({
     },
     NOTE_SELECT(state, select) {
       state.indexnote=select;
+    },
+    SAVE_NOTE(state, note) {
+      if(state.addnote) {
+        state.notes.push(note);
+      }else{
+        const index = state.notes.findIndex(i => i.id === state.todo.id);
+        if( index !== -1 ) {
+            state.notes.splice(index, 1, todo)
+        }
+      }
     }
   },
   actions: {
+    saveNote({commit}, index) {
+      try {
+          commit('SAVE_NOTE', index);
+      } catch(e) {
+          console.log(e);
+      }
+    },
     deleteTodo({commit}, index) {
       try {
           commit('DELETE_TODO', index);
@@ -155,7 +173,6 @@ export default new Vuex.Store({
     },
     editTodo({commit}, todo) {
       try {
-        console.log(todo);
         commit('EDIT_TODO', todo);
       } catch(e) {
         console.log(e);
@@ -200,6 +217,9 @@ export default new Vuex.Store({
     todo(state) {
       return state.todo;
     },
+    modeedit(state) {
+      return state.addnote;
+    },
     note(state) {
       console.log(state.indexnote);
       if(state.indexnote>=0) {
@@ -209,19 +229,28 @@ export default new Vuex.Store({
           todos: state.notes[state.indexnote].todos
         }
         state.note=nt;
+        state.addnote = false;
       }else {
         const nt = {
           id: state.notes.length,
-          title: `Заголовок заметки ${state.notes.length}`,
+          title: `Заголовок заметки ${state.notes.length+1}`,
           todos: [{
             id: 0,
-            title: "Заметка добвлена",
+            title: "Заметка добавлена",
+            done: false
+          },{
+            id: 1,
+            title: "Заметка добавлена",
             done: false
           }]
         }
+        state.addnote = true;
         state.note=nt;
       }
       return state.note
+    },
+    undonote(state) {
+      return state.undonote;
     },
     allTodos(state) {
       return state.notes[state.indexnote].todos;
