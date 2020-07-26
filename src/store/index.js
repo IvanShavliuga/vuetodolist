@@ -89,6 +89,12 @@ export default new Vuex.Store({
     indexnote: -1 //Индекс выбранной заметки
   },
   mutations: {
+    INIT_DATA(state) {
+        let data = localStorage.getItem('vuetodolist');
+        if (data) {
+            state.sessions = JSON.parse(data);
+        }
+    },
     DELETE_TODO(state, inddel) {
       const index = state.note.todos.findIndex(i => i.id === inddel);
       if( index !== -1  ) {
@@ -170,6 +176,13 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    initData({commit}, index) {
+      try {
+          commit('INIT_DATA');
+      } catch(e) {
+          console.log(e);
+      }
+    },
     deleteNote({commit}, index) {
       try {
           commit('DELETE_NOTE', index);
@@ -286,6 +299,16 @@ export default new Vuex.Store({
     },
     allNotes(state) {
       return state.notes;
+    }
+  },
+  watch(){
+    (state) => state.sessions,
+    (val) => {
+        console.log('CHANGE: ', val);
+        localStorage.setItem('vue-chat-session', JSON.stringify(val));
+    },
+    {
+        deep: true
     }
   }
 })
