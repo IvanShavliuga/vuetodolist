@@ -4,8 +4,9 @@
       <h1>{{(modeedit)?'Добавить':'Редактировать'}} задачу</h1>
       <div class = "form__panel">
         <button class="form__button button__close"
-          title="Вернуть на главную">
-          <router-link class="form__link" to="/">Главная</router-link>
+          title="Вернуть на главную"
+          @click="rethome">
+          Главная
         </button>
         <input class="form__addtext"
           type="text"
@@ -27,7 +28,7 @@
         <input class="form__id"
           type="text"
           disabled
-          :value="'#'+note.id"
+          :value="'#'+(note.id+1)"
           v-if="note.id>=0"
         />
         <input class="form__title"
@@ -97,8 +98,12 @@ export default {
       this.note = new Object({});
       this.$router.push({ path: "/" })
     },
+    rethome(){
+      this.modalShow=true;
+    },
     send(type) {
       if(type == 'yes') {
+        this.$router.push({ path: "/" })
       }
       this.modalShow=false;
     }

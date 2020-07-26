@@ -1,7 +1,7 @@
 <template>
 <div class="modal">
   <div class="modal__box">
-    <p class="modal__text">Вы подтверждаете, что желаете сделать изменения?</p>
+    <p class="modal__text">Вы не сохранили изменения. Все равно продолжить</p>
     <i class="modal__close" role="button" @click="submit('no')">X</i>
     <button class="modal__button modal__yes" @click="submit('yes')">Yes</button>
     <button class="modal__button modal__no" @click="submit('no')">No</button>

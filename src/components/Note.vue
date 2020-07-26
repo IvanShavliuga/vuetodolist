@@ -18,6 +18,7 @@
 </template>
 <script>
 import TodoItem from './TodoItem.vue'
+import Modal from '../components/Modal.vue'
 export default {
   name: 'Note',
   props: {
@@ -39,11 +40,12 @@ export default {
       this.$router.push({ path: "/edit/" })
     },
     deletenote(id) {
-      this.$store.dispatch("deleteNote", id);
+      this.$emit("delete", id);
     }
   },
   components: {
-    TodoItem
+    TodoItem,
+    Modal
   }
 }
 </script>

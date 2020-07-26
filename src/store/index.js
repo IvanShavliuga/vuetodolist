@@ -136,11 +136,15 @@ export default new Vuex.Store({
       }
     },
     NOTE_SELECT(state, select) {
-      state.indexnote=select;
-      if(select<0) {
-        state.addnote=true
-      }else
+      const index = state.notes.findIndex(i => i.id === select);
+      if( index !== -1 ) {
+        state.indexnote=index;
         state.addnote=false
+      }
+      else {
+        state.indexnote=index;
+        state.addnote=true
+      }
     },
     SAVE_NOTE(state) {
       const nt = {
