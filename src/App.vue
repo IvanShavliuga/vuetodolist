@@ -1,19 +1,10 @@
 <template>
   <div id="app">
     <!--<Modal/>-->
-    <NavBar/>
     <router-view/>
     <p class="copyright">(C) 2020 <a href="https://github.com/IvanShavliuga">Ivan Ivanov (Shavliuga)</a>, Belarus, Novopolotsk</p>
   </div>
 </template>
-<script>
-import NavBar from './components/NavBar.vue'
-export default {
-  components: {
-    NavBar
-  }
-}
-</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

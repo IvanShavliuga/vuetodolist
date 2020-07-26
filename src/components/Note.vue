@@ -3,26 +3,8 @@
   <h3 class="note__title">#{{note.id+1}} {{note.title}}</h3>
   <ul class="note__menu">
     <li class="note__item" @click="edit(note.id)">Редактировать</li>
-    <li class="note__item">Удалить</li>
-    <li class="note__item">Отменить</li>
+    <li class="note__item" @click="deletenote(note.id)">Удалить</li>
   </ul>
-  <!--<div class="note__filter">
-    <span class="note__filter-all"
-      :style="(filterMask==='all')?('color:#982112'):('')"
-      @click="filterChange('all')">
-      Все
-    </span>
-    <span class="note__filter-done"
-      :style="(filterMask==='complete')?('color:#982112'):('')"
-      @click="filterChange('complete')">
-      Выполнено
-    </span>
-    <span class="note__filter-queque"
-      :style="(filterMask==='incomplete')?('color:#982112'):('')"
-      @click="filterChange('incomplete')">
-      На очереди
-    </span>
-  </div>-->
   <div v-if="note.todos.length">
     <TodoItem v-for="(t,k) in note.todos"
       :todo="t"
@@ -35,7 +17,6 @@
 </article>
 </template>
 <script>
-import {mapGetters, mapActions} from 'vuex'
 import TodoItem from './TodoItem.vue'
 export default {
   name: 'Note',
@@ -56,16 +37,13 @@ export default {
     edit(id) {
       this.$store.dispatch("noteSelect", id);
       this.$router.push({ path: "/edit/" })
+    },
+    deletenote(id) {
+      this.$store.dispatch("deleteNote", id);
     }
   },
   components: {
     TodoItem
-  },
-  computed: {
-    ...mapGetters([
-        'filteredTodos',
-        'filterMask'
-    ])
   }
 }
 </script>
@@ -85,6 +63,7 @@ export default {
   list-style: none;
   margin: 0 5px;
   display: inline-block;
+  cursor: pointer;
 }
 .note__title {
   font-size: 22px;

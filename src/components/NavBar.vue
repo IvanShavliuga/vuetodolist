@@ -2,7 +2,7 @@
   <ul class="nav">
     <li class="nav__item">Vue.js</li>
     <li class="nav__item">
-      <router-link to="/">Список задач</router-link></li>
+      <router-link to="/">Список заметок</router-link></li>
     <li class="nav__item" @click.prevent="addTodo">
       <router-link to="/edit">Добавить заметку</router-link>
     </li>

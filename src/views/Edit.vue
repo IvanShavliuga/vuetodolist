@@ -1,21 +1,11 @@
 <template>
   <div class="edit">
-    <b style="color:#df98a0">{{note}}</b>
-    <b style="color:#89c8a0">{{undonote}}</b>
     <div class="edit__form" v-if="!modalShow">
       <h1>{{(modeedit)?'Добавить':'Редактировать'}} задачу</h1>
       <div class = "form__panel">
         <button class="form__button button__close"
           title="Вернуть на главную">
-          Главная
-        </button>
-        <button class="form__button button__cancel"
-          title="Отменить изменения">
-          Отмена
-        </button>
-        <button class="form__button button__retry"
-          title="Повторить изменения">
-          Повторить
+          <router-link class="form__link" to="/">Главная</router-link>
         </button>
         <input class="form__addtext"
           type="text"
@@ -43,16 +33,6 @@
         <input class="form__title"
           type="text"
           v-model="note.title">
-        <br>
-        <!--<div class = "form__panel">
-          <input class="form__check" id="done" type="checkbox" v-model="todo.done">
-          <label class="form__label" for="done">
-            {{(todo.done)?('выполнено'):('на очереди')}}
-          </label>
-          <button class="form__button"
-            @click.prevent="change"> Отправить
-          </button>
-        </div> -->
       </form>
       <div class="edit__list" v-if="note.todos.length">
         <TodoItem v-for="(t,k) in note.todos"
@@ -86,7 +66,9 @@ export default {
     }
   },
   created() {
-    this.note = this.$store.getters.note;
+    this.note = new Object({id: this.$store.getters.note.id,
+      title: this.$store.getters.note.title,
+      todos: this.$store.getters.note.todos});
     this.undonote = this.$store.getters.undonote;
     this.moveedit = this.$store.getters.moveedit;
   },
@@ -111,7 +93,9 @@ export default {
       this.$store.dispatch("addTodo",task);
     },
     saveNote() {
-      
+      this.$store.dispatch("saveNote");
+      this.note = new Object({});
+      this.$router.push({ path: "/" })
     },
     send(type) {
       if(type == 'yes') {
@@ -144,6 +128,11 @@ export default {
 .form {
   margin-top: 50px;
 }
+.form__link {
+  color: #fff;
+  font-size: 22px;
+  text-decoration: none;
+}
 .form__id {
   width: 3%;
   height: 30px;
@@ -173,6 +162,7 @@ export default {
   font-size: 20px;
   padding: 5px;
   display: inline-block;
+  color: #765681;
 }
 .form__body {
   width: 100%;
@@ -182,6 +172,7 @@ export default {
   margin: 20px 0;
   padding: 15px 5px;
   height: 40px;
+  text-align: left;
 }
 .form__label, .form__check {
   font-size: 22px;

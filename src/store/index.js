@@ -82,7 +82,7 @@ export default new Vuex.Store({
       ]
     }],
     filter: 'all', //Фильтер задач
-    addnote: true,
+    addnote: true, //Флаг добавления
     node: {}, //Переменная для редактирования
     undonote: [], //Переменная для отмены
     indexedit: -1, //Индекс выбранной задачи
@@ -137,19 +137,42 @@ export default new Vuex.Store({
     },
     NOTE_SELECT(state, select) {
       state.indexnote=select;
+      if(select<0) {
+        state.addnote=true
+      }else
+        state.addnote=false
     },
-    SAVE_NOTE(state, note) {
+    SAVE_NOTE(state) {
+      const nt = {
+        id: state.indexnote,
+        title: state.note.title,
+        todos: state.note.todos
+      }
       if(state.addnote) {
-        state.notes.push(note);
+        state.notes.push(nt);
       }else{
-        const index = state.notes.findIndex(i => i.id === state.todo.id);
+        const index = state.notes.findIndex(i => i.id === state.node.id);
         if( index !== -1 ) {
-            state.notes.splice(index, 1, todo)
+            state.notes.splice(index, 1, nt)
         }
+      }
+      state.note = {}
+    },
+    DELETE_NOTE(state, id) {
+      const index = state.notes.findIndex(i => i.id === id);
+      if( index !== -1 ) {
+          state.notes.splice(index, 1)
       }
     }
   },
   actions: {
+    deleteNote({commit}, index) {
+      try {
+          commit('DELETE_NOTE', index);
+      } catch(e) {
+          console.log(e);
+      }
+    },
     saveNote({commit}, index) {
       try {
           commit('SAVE_NOTE', index);
@@ -221,7 +244,6 @@ export default new Vuex.Store({
       return state.addnote;
     },
     note(state) {
-      console.log(state.indexnote);
       if(state.indexnote>=0) {
         const nt = {
           id: state.indexnote,
