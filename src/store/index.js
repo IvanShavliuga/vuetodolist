@@ -84,26 +84,21 @@ export default new Vuex.Store({
     filter: 'all', //Фильтер задач
     addnote: true, //Флаг добавления
     node: {}, //Переменная для редактирования
-    undonote: [], //Переменная для отмены
     indexedit: -1, //Индекс выбранной задачи
     indexnote: -1 //Индекс выбранной заметки
   },
   mutations: {
     INIT_DATA(state) {
-        let data = localStorage.getItem('vuetodolist');
+        console.log("init")
+        let data = localStorage.getItem('vuetodolist_undo');
         if (data) {
-            state.sessions = JSON.parse(data);
+            state.notes = JSON.parse(data);
+            console.log("init: "+state.notes.length)
         }
     },
     DELETE_TODO(state, inddel) {
       const index = state.note.todos.findIndex(i => i.id === inddel);
       if( index !== -1  ) {
-        console.log("note: "+state.note.todos.length)
-        /*state.undonote.push ({
-          id: state.note.id,
-          title: state.note.title,
-          todos: state.note.todos
-        });*/
         state.note.todos.splice(index, 1)
         console.log("note: "+state.note.todos.length)
       }
@@ -142,26 +137,30 @@ export default new Vuex.Store({
       }
     },
     NOTE_SELECT(state, select) {
-      const index = state.notes.findIndex(i => i.id === select);
-      if( index !== -1 ) {
-        state.indexnote=index;
-        state.addnote=false
-      }
-      else {
-        state.indexnote=index;
+      if(select==-1)  {
+        state.indexnote=state.notes.length;
         state.addnote=true
+      }else{
+        const index = state.notes.findIndex(i => i.id === select);
+        if( index !== -1 ) {
+          state.indexnote=select;
+          state.addnote=false
+        }
       }
     },
-    SAVE_NOTE(state) {
+    SAVE_NOTE(state, note) {
+      localStorage.setItem('vuetodolist_undo', JSON.stringify(state.notes));
       const nt = {
-        id: state.indexnote,
-        title: state.note.title,
-        todos: state.note.todos
+        id: note.id,
+        title: note.title,
+        todos: note.todos
       }
+      console.log("******** NOTE.title: "+nt.title)
       if(state.addnote) {
         state.notes.push(nt);
       }else{
-        const index = state.notes.findIndex(i => i.id === state.node.id);
+        const index = state.notes.findIndex(i => i.id === note.id);
+        console.log("******** index: "+index)
         if( index !== -1 ) {
             state.notes.splice(index, 1, nt)
         }
@@ -169,9 +168,28 @@ export default new Vuex.Store({
       state.note = {}
     },
     DELETE_NOTE(state, id) {
+      localStorage.setItem('vuetodolist_undo', JSON.stringify(state.notes));
       const index = state.notes.findIndex(i => i.id === id);
       if( index !== -1 ) {
           state.notes.splice(index, 1)
+      }
+    },
+    UNDO_NOTE(state) {
+      const nt = state.notes;
+      let data = localStorage.getItem('vuetodolist_undo');
+      if (data) {
+          state.notes = JSON.parse(data);
+          console.log("undo: "+  state.notes.length)
+          localStorage.setItem('vuetodolist_redo', JSON.stringify(nt));
+      }
+    },
+    REDO_NOTE(state) {
+      const nt = state.notes;
+      let data = localStorage.getItem('vuetodolist_redo');
+      if (data) {
+          state.notes = JSON.parse(data);
+          console.log("redo: "+state.notes.length)
+          localStorage.setItem('vuetodolist_undo', JSON.stringify(nt));
       }
     }
   },
@@ -190,9 +208,23 @@ export default new Vuex.Store({
           console.log(e);
       }
     },
-    saveNote({commit}, index) {
+    undoNote({commit}) {
       try {
-          commit('SAVE_NOTE', index);
+          commit('UNDO_NOTE');
+      } catch(e) {
+          console.log(e);
+      }
+    },
+    redoNote({commit}) {
+      try {
+          commit('REDO_NOTE');
+      } catch(e) {
+          console.log(e);
+      }
+    },
+    saveNote({commit}, note) {
+      try {
+          commit('SAVE_NOTE', note);
       } catch(e) {
           console.log(e);
       }
@@ -272,7 +304,7 @@ export default new Vuex.Store({
       }else {
         const nt = {
           id: state.notes.length,
-          title: `Заголовок заметки ${state.notes.length+1}`,
+          title: `112Заголовок заметки ${state.notes.length+1}`,
           todos: [{
             id: 0,
             title: "Заметка добавлена",
@@ -299,16 +331,6 @@ export default new Vuex.Store({
     },
     allNotes(state) {
       return state.notes;
-    }
-  },
-  watch(){
-    (state) => state.sessions,
-    (val) => {
-        console.log('CHANGE: ', val);
-        localStorage.setItem('vue-chat-session', JSON.stringify(val));
-    },
-    {
-        deep: true
     }
   }
 })

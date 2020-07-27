@@ -36,6 +36,7 @@ export default {
   },
   methods: {
     edit(id) {
+      console.log("EDIT: "+id)
       this.$store.dispatch("noteSelect", id);
       this.$router.push({ path: "/edit/" })
     },

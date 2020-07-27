@@ -4,11 +4,13 @@
       <h1 class="home__title">Список заметок</h1>
       <div class = "form__panel">
         <button class="form__button button__cancel"
-          title="Отменить изменения">
+          title="Отменить изменения"
+          @click="undoNote">
           Отмена
         </button>
         <button class="form__button button__retry"
-          title="Повторить изменения">
+          title="Повторить изменения"
+          @click="redoNote">
           Повторить
         </button>
         <button class="form__button botton__add"
@@ -55,7 +57,9 @@ export default {
   },
   methods: {
     ...mapActions([
-      'noteSelect'
+      'noteSelect',
+      "undoNote",
+      "redoNote"
     ]),
     delnote(id) {
       this.modalShow=true;

@@ -58,8 +58,7 @@ export default {
   data() {
     return {
       modalShow: false,
-      note: {},
-      undonote: {},
+      note: {id: 0, title: "test",todos:[]},
       modeedit: true,
       addtaskform: false,
       addtasktext: "Текст задачи",
@@ -67,17 +66,18 @@ export default {
     }
   },
   created() {
-    this.note = new Object({id: this.$store.getters.note.id,
+    this.note = {id: this.$store.getters.note.id,
       title: this.$store.getters.note.title,
-      todos: this.$store.getters.note.todos});
-    this.undonote = this.$store.getters.undonote;
+      todos: this.$store.getters.note.todos};
     this.moveedit = this.$store.getters.moveedit;
-  },
+  },/*
   updated() {
-    this.note = this.$store.getters.note;
+    this.note = {id: this.$store.getters.note.id,
+      title: this.$store.getters.note.title,
+      todos: this.$store.getters.note.todos};
     this.undonote = this.$store.getters.undonote;
     this.moveedit = this.$store.getters.moveedit;
-  },
+  },*/
   name: "Edit",
   methods: {
     change() {
@@ -94,8 +94,7 @@ export default {
       this.$store.dispatch("addTodo",task);
     },
     saveNote() {
-      this.$store.dispatch("saveNote");
-      this.note = new Object({});
+      this.$store.dispatch("saveNote",this.note);
       this.$router.push({ path: "/" })
     },
     rethome(){
@@ -106,6 +105,7 @@ export default {
         this.$router.push({ path: "/" })
       }
       this.modalShow=false;
+      this.$router.push({ path: "/" })
     }
     /*,
     send(type){

@@ -40,6 +40,11 @@ export default {
       default: "read"
     }
   },
+  data() {
+    return {
+      todoedit: []
+    }
+  },
   methods: {
     /*...mapActions([
         'deleteTodo'
@@ -51,6 +56,10 @@ export default {
     deleteTodo(id) {
       this.$emit("delete",id);
     }
+  },
+  created() {
+    if(this.mode=='write')
+      this.todoedit = this.todo;
   }
 }
 </script>
