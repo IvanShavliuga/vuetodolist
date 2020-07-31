@@ -1,7 +1,7 @@
 <template>
   <div class="edit">
     <div class="edit__form" v-if="!modalShow">
-      <h1>{{(modeedit)?'Добавить':'Редактировать'}} задачу</h1>
+      <h1>{{(modeedit)?'Редактировать':'Добавить'}} задачу</h1>
       <div class = "form__panel">
         <button class="form__button button__close"
           title="Вернуть на главную"
@@ -35,14 +35,15 @@
           type="text"
           v-model="note.title">
       </form>
-      <div class="edit__list" v-if="note.todos.length">
-        <TodoItem v-for="(t,k) in note.todos"
+      <div class="edit__list">
+        <TodoItem v-for="(t,k) in todosnew"
           :todo="t"
           :key="k"
           mode="write"
+          @changetodo="changeitem"
           @delete="deleteTodoClick"/>
       </div>
-      <div v-else>
+      <div v-if="todosnew.length===0">
         <p>Нет задач в списке</p>
       </div>
     </div>
@@ -55,10 +56,12 @@
 import Modal from '../components/Modal.vue'
 import TodoItem from '../components/TodoItem.vue'
 export default {
+  props:["id"],
   data() {
     return {
       modalShow: false,
       note: {id: 0, title: "test",todos:[]},
+      todosnew: [],
       modeedit: true,
       addtaskform: false,
       addtasktext: "Текст задачи",
@@ -66,34 +69,45 @@ export default {
     }
   },
   created() {
-    this.note = {id: this.$store.getters.note.id,
-      title: this.$store.getters.note.title,
-      todos: this.$store.getters.note.todos};
-    this.moveedit = this.$store.getters.moveedit;
-  },/*
-  updated() {
-    this.note = {id: this.$store.getters.note.id,
-      title: this.$store.getters.note.title,
-      todos: this.$store.getters.note.todos};
-    this.undonote = this.$store.getters.undonote;
-    this.moveedit = this.$store.getters.moveedit;
-  },*/
+    if(this.id>=0) {
+      this.note = this.$store.getters.allNotes[this.id];
+      for(let i=0; i<this.note.todos.length; i++)
+        this.todosnew.push(this.note.todos[i]);
+      this.modeedit = true;
+    }else{
+      this.modeedit=false;
+      this.note.id = this.$store.getters.allNotes.length;
+      this.todosnew = [];
+    }
+    this.$store.dispatch("toStorage",'redo');
+  },
   name: "Edit",
   methods: {
     change() {
       this.modalShow = true;
     },
+    changeitem(t) {
+      const index = this.todosnew.findIndex(i => i.id === t.id);
+      if( index !== -1 ) {
+        this.todosnew.splice(index,1,t);
+      }
+    },
     deleteTodoClick(id) {
-      this.$store.dispatch("deleteTodo",id);
+      const index = this.todosnew.findIndex(i => i.id === id);
+      if( index !== -1 ) {
+        this.todosnew.splice(index,1);
+      }
     },
     addTodoSend() {
-      const task =   {
+      const todo =   {
+        id: this.todosnew.length,
         title: this.addtasktext,
         done: this.addtaskdone
       }
-      this.$store.dispatch("addTodo",task);
+      this.todosnew.push(todo);
     },
     saveNote() {
+      this.note.todos = this.todosnew;
       this.$store.dispatch("saveNote",this.note);
       this.$router.push({ path: "/" })
     },
@@ -105,19 +119,7 @@ export default {
         this.$router.push({ path: "/" })
       }
       this.modalShow=false;
-      this.$router.push({ path: "/" })
     }
-    /*,
-    send(type){
-      if(type=='yes') {
-        if(this.todo.id>=0)
-          this.$store.dispatch("editTodo", this.todo)
-        else
-          this.$store.dispatch("addTodo",this.todo)
-      }
-      this.modalShow = false;
-      this.$router.push({path:'/'});
-    }*/
   },
   components: {
     Modal,
@@ -194,4 +196,5 @@ export default {
   background-color: #45ac45;
   border: 1px solid #238923;
 }
+
 </style>

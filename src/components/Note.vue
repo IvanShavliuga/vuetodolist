@@ -2,16 +2,16 @@
 <article class="note">
   <h3 class="note__title">#{{note.id+1}} {{note.title}}</h3>
   <ul class="note__menu">
-    <li class="note__item" @click="edit(note.id)">Редактировать</li>
+    <li class="note__item"><router-link :to="'/edit/'+note.id">Редактировать</router-link></li>
     <li class="note__item" @click="deletenote(note.id)">Удалить</li>
   </ul>
-  <div v-if="note.todos.length">
+  <div>
     <TodoItem v-for="(t,k) in note.todos"
       :todo="t"
       :key="k"
       />
   </div>
-  <div v-else>
+  <div v-if="note.todos.length===0">
     <p>Нет задач в списке</p>
   </div>
 </article>
@@ -35,11 +35,10 @@ export default {
     }
   },
   methods: {
-    edit(id) {
-      console.log("EDIT: "+id)
+    /*edit(id) {
       this.$store.dispatch("noteSelect", id);
       this.$router.push({ path: "/edit/" })
-    },
+    },*/
     deletenote(id) {
       this.$emit("delete", id);
     }
@@ -47,12 +46,15 @@ export default {
   components: {
     TodoItem,
     Modal
+  },
+  updated() {
+    this.$store.dispatch("toStorage",'undo');
   }
 }
 </script>
 <style>
 .note {
-  border-top: 1px solid #c3c3c3;
+  border: 1px solid #c3c3c3;
   width: 40%;
   margin: 10px 15px;
 }

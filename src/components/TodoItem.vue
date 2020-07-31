@@ -3,29 +3,37 @@
     <p class="todo__info">
       <span class="todo__id">#{{todo.id + 1}}</span>
       <span class="todo__title" v-if="mode=='read'">{{todo.title}}</span>
+      <span class="todo__title" v-if="mode=='write'&&!changeflag">{{todoedit.title}}</span>
       <input class="todo__input"
         type="text"
-        v-if="mode=='write'"
-        v-model="todo.title"
+        v-if="mode=='write'&&changeflag"
+        v-model="todoedit.title"
       />
     </p>
     <p class="todo__status">
       <input type="checkbox"
-        v-model="todo.done"
-        v-if="mode=='write'"
+        v-model="todoedit.done"
+        v-if="mode=='write'&&changeflag"
       />
-      <span :class="(todo.done)?('todo__done'):('')">
+      <span v-if="mode=='read'" :class="(todo.done)?('todo__done'):('')">
         {{(todo.done)?('выполнено'):('в очереди')}}
+      </span>
+      <span v-if="mode=='write'" :class="(todoedit.done)?('todo__done'):('')">
+        {{(todoedit.done)?('выполнено'):('в очереди')}}
       </span>
       <button class="todo__button todo__delete"
         v-if="mode=='write'"
         @click="deleteTodo(todo.id)">
         Удалить
       </button>
+      <button class="todo__button todo__delete"
+        v-if="mode=='write'"
+        @click="changeTodo">
+        Изменить
+      </button>
     </p>
   </div>
 </template>
-
 <script>
 import {mapActions} from 'vuex'
 export default {
@@ -42,24 +50,30 @@ export default {
   },
   data() {
     return {
-      todoedit: []
+      todoedit: {},
+      changeflag: false
     }
   },
   methods: {
-    /*...mapActions([
-        'deleteTodo'
-    ])
-    selectTodo() {
-      this.$store.dispatch("todoSelect", this.todo.id);
-      this.$router.push({ path: "/edit/" })
-    },*/
     deleteTodo(id) {
       this.$emit("delete",id);
+    },
+    changeTodo() {
+      if(!this.changeflag) {
+        this.changeflag = true
+      }else{
+        this.$emit("changetodo", this.todoedit);
+        this.changeflag = false
+      }
     }
   },
   created() {
     if(this.mode=='write')
-      this.todoedit = this.todo;
+      this.todoedit = {
+        id: this.todo.id,
+        title: this.todo.title,
+        done: this.todo.done
+      };
   }
 }
 </script>

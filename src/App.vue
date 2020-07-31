@@ -6,8 +6,13 @@
 </template>
 <script>
 export default {
+  name:"App",
   created() {
     this.$store.dispatch("initData");
+    this.$router.push('/')
+  },
+  beforeDestory() {
+    this.$store.dispatch("toStorage",'redo');
   }
 }
 </script>

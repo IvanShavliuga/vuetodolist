@@ -9,10 +9,11 @@ Vue.use(VueRouter)
   {
     path: '/',
     name: 'Home',
-    component: Home
+    component: () => import(/* webpackChunkName: "about" */ '../views/Home.vue')
   },
   {
-    path: '/edit',
+    path: '/edit/:id',
+    props: true,
     name: 'Edit',
     component: Edit
   }
@@ -20,7 +21,7 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
+  base: 'https://ivanshavliuga.github.io/vuetodolist/index.html',
   routes
 })
 

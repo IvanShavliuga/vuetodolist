@@ -15,8 +15,8 @@
         </button>
         <button class="form__button botton__add"
           title="добавить заметку"
-          @click="noteSelect(-1)">
-          <router-link class="form__link" to="/edit">Добавить</router-link>
+          >
+          <router-link to="/edit/add">Добавить</router-link>
         </button>
       </div>
       <div class="home__list" v-if="allNotes.length">
@@ -57,7 +57,6 @@ export default {
   },
   methods: {
     ...mapActions([
-      'noteSelect',
       "undoNote",
       "redoNote"
     ]),
@@ -100,8 +99,9 @@ export default {
   font-size: 22px;
   text-decoration: none;
 }
-.nav a.router-link-exact-active {
+.form__button a {
   color: #fff;
+  text-decoration: none;
 }
 .nav__item {
   list-style: none;
