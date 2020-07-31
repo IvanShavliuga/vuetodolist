@@ -21,7 +21,7 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
   mode: 'history',
-  base: 'https://ivanshavliuga.github.io/vuetodolist/index.html',
+  base: 'index.html',
   routes
 })
 
